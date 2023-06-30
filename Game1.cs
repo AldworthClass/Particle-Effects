@@ -8,6 +8,8 @@ namespace Particle_Effects
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        Texture2D starTexture, circleTexture, diamondTexture;
+
 
         public Game1()
         {
@@ -28,6 +30,9 @@ namespace Particle_Effects
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            starTexture = Content.Load<Texture2D>("star");
+            circleTexture = Content.Load<Texture2D>("circle");
+            diamondTexture = Content.Load<Texture2D>("diamond");
         }
 
         protected override void Update(GameTime gameTime)
