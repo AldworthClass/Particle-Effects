@@ -15,8 +15,6 @@ namespace Particle_Effects
         private List<Particle> particles;
         private List<Texture2D> textures;
 
-
-
         public ParticleSystem(List<Texture2D> textures, Vector2 location)
         {
             EmitterLocation = location;
@@ -66,7 +64,7 @@ namespace Particle_Effects
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
             for (int index = 0; index < particles.Count; index++)
             {
                 particles[index].Draw(spriteBatch);
