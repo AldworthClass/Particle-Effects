@@ -12,7 +12,9 @@ namespace Particle_Effects
         Texture2D starTexture, circleTexture, diamondTexture;
         ParticleSystem particleSystem;
 
+        Vector2 direction;
 
+        KeyboardState KeyboardState;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -31,6 +33,13 @@ namespace Particle_Effects
             textures.Add(starTexture);
             textures.Add(diamondTexture);
             particleSystem = new ParticleSystem(textures, new Vector2(400, 240));
+            //particleSystem.Enabled = false; // Start with the particle system disabled
+            particleSystem.ParticleDensity = 1;
+            particleSystem.Duration = 3f; // Duration in seconds
+            particleSystem.ParticleSpeed = 2f;
+            particleSystem.RotationSpeed = -0.3f;
+            //particleSystem.RandomizeRotation = false;
+            particleSystem.FadeOut = true; // Enable fade out effect
 
         }
 
@@ -46,6 +55,40 @@ namespace Particle_Effects
 
         protected override void Update(GameTime gameTime)
         {
+            KeyboardState = Keyboard.GetState();
+            direction = Vector2.Zero;
+            if (KeyboardState.IsKeyDown(Keys.W))
+                direction.Y -= 1;
+            if (KeyboardState.IsKeyDown(Keys.S))
+                direction.Y += 1;
+            if (KeyboardState.IsKeyDown(Keys.A))
+                direction.X -= 1;
+            if (KeyboardState.IsKeyDown(Keys.D))
+                direction.X += 1;
+            if (KeyboardState.IsKeyDown(Keys.Space))
+                particleSystem.AngleSpread = 0.2f;
+            else
+                particleSystem.AngleSpread = MathHelper.PiOver4;
+
+            if (KeyboardState.IsKeyDown(Keys.R))
+            {
+                particleSystem.RandomizeColor = false; // Toggle random color
+                particleSystem.Color = Color.Red; // Toggle the particle system on/off
+            }
+            if (KeyboardState.IsKeyDown(Keys.G))
+            {
+                particleSystem.RandomizeColor = false; // Toggle random color
+                particleSystem.Color = Color.Green; // Toggle the particle system on/off
+            }
+
+            if (KeyboardState.IsKeyDown(Keys.Enter))
+            {
+                particleSystem.RandomizeColor = true; // Toggle random color
+                
+            }
+
+            particleSystem.Direction = direction;
+
             particleSystem.EmitterLocation = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
             particleSystem.Update();
 
