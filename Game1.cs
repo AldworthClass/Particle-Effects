@@ -34,12 +34,13 @@ namespace Particle_Effects
             textures.Add(diamondTexture);
             particleSystem = new ParticleSystem(textures, new Vector2(400, 240));
             //particleSystem.Enabled = false; // Start with the particle system disabled
-            particleSystem.ParticleDensity = 1;
-            particleSystem.Duration = 3f; // Duration in seconds
-            particleSystem.ParticleSpeed = 2f;
+            particleSystem.ParticleDensity = 0.5f;
+            particleSystem.Duration = 2f; // Duration in seconds
+            particleSystem.ParticleSpeed = 1.5f;
             particleSystem.RotationSpeed = -0.3f;
             //particleSystem.RandomizeRotation = false;
             particleSystem.FadeOut = true; // Enable fade out effect
+            particleSystem.AngleSpread = MathHelper.Pi;
 
         }
 
