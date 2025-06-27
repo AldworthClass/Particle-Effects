@@ -8,122 +8,114 @@ using System.Threading.Tasks;
 
 namespace Particle_Effects
 {
+    /// <summary>
+    /// Manages a collection of particles, handling their creation, updating, and rendering.
+    /// </summary>
     public class ParticleSystem
     {
         private Random _generator;
+
+        /// <summary>
+        /// Gets or sets the location of the particle emitter.
+        /// </summary>
         public Vector2 EmitterLocation { get; set; }
 
         private Vector2 _direction;
         private List<Particle> _particles;
         private List<Texture2D> _textures;
 
-
-        private float _particleDensity; // a percent, controlling how many particles are generated per update
-        private float _rotationSpeed; // Speed of rotation in radians per second
-        private float _angleSpread; // angle of spread around the direction vector in radians
+        private float _particleDensity;
+        private float _rotationSpeed;
+        private float _angleSpread;
         private float _particleSpeed;
-        private float _lifetime; // Lifetime of particles in seconds (not currently used in this implementation)
-
-
+        private float _lifetime;
         private int _maxParticles;
-
-        int _minParticleSize; // Minimum size of particles
-        int _maxParticleSize; // Maximum size of particles
-
-
+        int _minParticleSize;
+        int _maxParticleSize;
         private Color _color;
-
-        private bool _enabled; // Whether the particle system is enabled or not
-        private bool _randomizeColor; // Whether to randomize the color of particles
-        private bool _randomizeParticleSize; // Whether to randomize the size of particles
+        private bool _enabled;
+        private bool _randomizeColor;
+        private bool _randomizeParticleSize;
         private bool _randomizeRotation;
         private bool _fadeOut;
 
-
-
-        // Creates with default values for direction, angle of spread, lifetime, speed, and color
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParticleSystem"/> class with default parameters.
+        /// </summary>
+        /// <param name="textures">A list of textures to use for particles.</param>
+        /// <param name="location">The location of the emitter.</param>
         public ParticleSystem(List<Texture2D> textures, Vector2 location)
         {
-
             EmitterLocation = location;
             _textures = textures;
             _particles = new List<Particle>();
             _generator = new Random();
 
-            _direction = Vector2.Zero; // Defaults to all directions
-            _particleDensity = 1f; // Adjust this value to control the density of particles
-            _maxParticles = 500; // Maximum number of particles in the system
-
+            _direction = Vector2.Zero;
+            _particleDensity = 1f;
+            _maxParticles = 500;
             _enabled = true;
             _randomizeColor = true;
-            _rotationSpeed = 0f; // No rotation by default
-            _randomizeRotation = true; // Default to randomizing rotation
-
-            _randomizeParticleSize = true; // Default to randomizing particle size
+            _rotationSpeed = 0f;
+            _randomizeRotation = true;
+            _randomizeParticleSize = true;
             _minParticleSize = 1;
-            _maxParticleSize = 5; // Maximum size of particles
-
-            _angleSpread = MathHelper.PiOver2;// MathHelper.PiOver4;
-
-            _lifetime = 2f; // Approximate lifetime of particles in seconds
-
+            _maxParticleSize = 5;
+            _angleSpread = MathHelper.PiOver2;
+            _lifetime = 2f;
             _particleSpeed = 1f;
-            _fadeOut = false; // Default to no fade out
-
-
+            _fadeOut = false;
         }
-        // Allows user to speficy multiple values
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParticleSystem"/> class with custom parameters.
+        /// </summary>
+        /// <param name="textures">A list of textures to use for particles.</param>
+        /// <param name="location">The location of the emitter.</param>
+        /// <param name="direction">The direction in which particles are emitted.</param>
+        /// <param name="speed">The speed of emitted particles.</param>
+        /// <param name="angleOfSpread">The angle of spread around the direction vector, in radians.</param>
+        /// <param name="lifetime">The lifetime of particles, in seconds.</param>
+        /// <param name="color">The color of the particles.</param>
         public ParticleSystem(List<Texture2D> textures, Vector2 location, Vector2 direction, float speed, float angleOfSpread, float lifetime, Color color)
         {
-
-            _randomizeColor = false; // Color is set by the user, so no need to randomize
+            _randomizeColor = false;
             _direction = direction;
             EmitterLocation = location;
             _textures = textures;
             _particles = new List<Particle>();
             _generator = new Random();
-            //_direction = Vector2.Zero;
-            _particleDensity = 0.2f; // Adjust this value to control the density of particles
-            _maxParticles = 500; // Maximum number of particles in the system
-
-            _randomizeParticleSize = true; // Default to randomizing particle size
+            _particleDensity = 0.2f;
+            _maxParticles = 500;
+            _randomizeParticleSize = true;
             _minParticleSize = 1;
-            _maxParticleSize = 5; // Maximum size of particles
-
+            _maxParticleSize = 5;
             _direction = new Vector2(1, 1);
-            _angleSpread = MathHelper.PiOver2;// MathHelper.PiOver4;
-
+            _angleSpread = MathHelper.PiOver2;
             _color = color;
-
             _particleSpeed = speed;
-
-            _lifetime = lifetime; // Approximate lifetime of particles in seconds
-
+            _lifetime = lifetime;
         }
 
+        /// <summary>
+        /// Generates a new particle with randomized properties based on the system's settings.
+        /// </summary>
+        /// <returns>A new <see cref="Particle"/> instance.</returns>
         private Particle GenerateNewParticle()
         {
-
             Texture2D texture = _textures[_generator.Next(_textures.Count)];
             Vector2 position = EmitterLocation;
             Vector2 particleDirection;
             if (_direction == Vector2.Zero)
             {
-                // Randomly choose a direction if none is set
                 particleDirection = new Vector2(
                     (float)(_generator.NextDouble() * 2 - 1),
                     (float)(_generator.NextDouble() * 2 - 1));
             }
-            else // Allows control for direction and spread of angles
+            else
             {
-                float newDirection;
-                int minAngle, maxAngle, angleRange;
-                // Normalize the direction to ensure consistent particle movement
                 _direction.Normalize();
-
-                // Randomly rotate the direction vector within the specified angle spread
                 particleDirection = GetRandomRotatedVector(_direction, _angleSpread / 2);
-
             }
 
             Vector2 velocity = new Vector2(
@@ -138,22 +130,24 @@ namespace Particle_Effects
 
             if (_randomizeColor)
             {
-                // Randomize color if the flag is set
                 _color = new Color(
                     (float)_generator.NextDouble(),
                     (float)_generator.NextDouble(),
                     (float)_generator.NextDouble());
             }
 
-
-
             float size = (float)_generator.NextDouble();
-            int ttl = (int)Math.Round(60 * _lifetime + _generator.Next(-5, 5)); // Adds a bit of randomness assuming 60FPS
+            int ttl = (int)Math.Round(60 * _lifetime + _generator.Next(-5, 5));
 
             return new Particle(texture, position, particleDirection * _particleSpeed, angle, angularVelocity, _color, size, ttl, _fadeOut);
         }
 
-        // Rotates a directional Vector by a given angle in radians
+        /// <summary>
+        /// Rotates a vector by a given angle in radians.
+        /// </summary>
+        /// <param name="v">The vector to rotate.</param>
+        /// <param name="angleRadians">The angle in radians.</param>
+        /// <returns>The rotated vector.</returns>
         public Vector2 RotateVector(Vector2 v, float angleRadians)
         {
             float cos = (float)Math.Cos(angleRadians);
@@ -164,7 +158,12 @@ namespace Particle_Effects
             );
         }
 
-        // Rotates a directional vector by a random angle offset within the specified range
+        /// <summary>
+        /// Rotates a vector by a random angle offset within the specified range.
+        /// </summary>
+        /// <param name="baseDirection">The base direction vector.</param>
+        /// <param name="maxAngleOffsetRadians">The maximum angle offset in radians.</param>
+        /// <returns>The rotated vector.</returns>
         public Vector2 GetRandomRotatedVector(Vector2 baseDirection, float maxAngleOffsetRadians)
         {
             Random rand = new Random();
@@ -172,13 +171,13 @@ namespace Particle_Effects
             return RotateVector(baseDirection, offset);
         }
 
-        // Adds and removes particles from the system
+        /// <summary>
+        /// Updates all particles in the system, adding new ones and removing expired ones.
+        /// </summary>
         public void Update()
         {
-
-            // The number of particles to be added per frame at a density of 1.0
             int total = 5;
-            if (_enabled)   // Only generates particles when enabled
+            if (_enabled)
             {
                 for (int i = 0; i < total * _particleDensity; i++)
                 {
@@ -194,9 +193,12 @@ namespace Particle_Effects
                     i--;
                 }
             }
-
         }
 
+        /// <summary>
+        /// Draws all particles in the system using the specified <see cref="SpriteBatch"/>.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch used to draw the particles.</param>
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
@@ -206,51 +208,81 @@ namespace Particle_Effects
             }
             spriteBatch.End();
         }
+
         // Accessor properties for particle system parameters
+
+        /// <summary>
+        /// Gets or sets the direction in which particles are emitted.
+        /// </summary>
         public Vector2 Direction
         {
             get { return _direction; }
             set { _direction = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the density of particles generated per update.
+        /// </summary>
         public float ParticleDensity
         {
             get { return _particleDensity; }
             set { _particleDensity = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the maximum number of particles in the system.
+        /// </summary>
         public int MaxParticles
         {
             get { return _maxParticles; }
             set { _maxParticles = value; }
         }
 
-        // Angle of spread in radians
+        /// <summary>
+        /// Gets or sets the angle of spread in radians.
+        /// </summary>
         public float AngleSpread
         {
             get { return _angleSpread; }
             set { _angleSpread = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the color of the particles.
+        /// </summary>
         public Color Color
         {
             get { return _color; }
             set { _color = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the speed at which particles move away from the emitter.
+        /// </summary>
         public float ParticleSpeed
         {
             get { return _particleSpeed; }
             set { _particleSpeed = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the minimum size of particles.
+        /// </summary>
         public int MinParticleSize
         {
             get { return _minParticleSize; }
             set
             {
                 if (value > _maxParticleSize)
-                    _minParticleSize = _maxParticleSize; // Ensure min is not greater than max
+                    _minParticleSize = _maxParticleSize;
                 else
                     _minParticleSize = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the maximum size of particles.
+        /// </summary>
         public int MaxParticleSize
         {
             get { return _maxParticleSize; }
@@ -264,11 +296,19 @@ namespace Particle_Effects
                     _maxParticleSize = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to randomize the color of particles.
+        /// </summary>
         public bool RandomizeColor
         {
             get { return _randomizeColor; }
             set { _randomizeColor = value; }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to randomize the size of particles.
+        /// </summary>
         public bool RandomizeParticleSize
         {
             get { return _randomizeParticleSize; }
@@ -277,33 +317,50 @@ namespace Particle_Effects
                 _randomizeParticleSize = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the particle system is enabled.
+        /// </summary>
         public bool Enabled
         {
             get { return _enabled; }
             set { _enabled = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the lifetime of particles in seconds.
+        /// </summary>
         public float Duration
         {
             get { return _lifetime; }
             set { _lifetime = value; }
-
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to randomize the rotation of particles.
+        /// </summary>
         public bool RandomizeRotation
         {
             get { return _randomizeRotation; }
             set { _randomizeRotation = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the rotation speed of particles in radians per second.
+        /// </summary>
         public float RotationSpeed
         {
             get { return _rotationSpeed; }
             set { _rotationSpeed = value; }
-
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether particles should fade out over time.
+        /// </summary>
         public bool FadeOut
         {
             get { return _fadeOut; }
-            set { _fadeOut = value; } // Allows particles to fade out over time
-
+            set { _fadeOut = value; }
         }
     }
 }

@@ -107,6 +107,9 @@ namespace Particle_Effects
 
             // TODO: Add your drawing code here
             particleSystem.Draw(_spriteBatch);
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(circleTexture, new Rectangle(10, 10, 100, 100), Color.White   );
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
