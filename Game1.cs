@@ -36,11 +36,12 @@ namespace Particle_Effects
             //particleSystem.Enabled = false; // Start with the particle system disabled
             particleSystem.ParticleDensity = 0.5f;
             particleSystem.Duration = 2f; // Duration in seconds
-            particleSystem.ParticleSpeed = 1.5f;
+            particleSystem.ParticleSpeed = 3.5f;
             particleSystem.RotationSpeed = -0.3f;
             //particleSystem.RandomizeRotation = false;
             particleSystem.FadeOut = true; // Enable fade out effect
             particleSystem.AngleSpread = MathHelper.Pi;
+            //particleSystem.ApplyGravity = true;
 
         }
 

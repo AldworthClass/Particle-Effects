@@ -24,12 +24,13 @@ namespace Particle_Effects
         private List<Particle> _particles;
         private List<Texture2D> _textures;
 
-        private float _particleDensity;
-        private float _rotationSpeed;
-        private float _angleSpread;
-        private float _particleSpeed;
-        private float _lifetime;
-        private int _maxParticles;
+        private float _particleDensity; // value between 0-1 a percentage
+        private float _rotationSpeed;   // Speed at which particles rotate
+        private float _angleSpread;     // Spread of particles in radians
+        private float _particleSpeed;   // Speed particles travel in pixels per frame
+        private float _lifetime;        // Approx lifetime in seconds with some randomness built in
+        private int _maxParticles;      // the maximum number of particles allowed
+        private float _gravity;
         int _minParticleSize;
         int _maxParticleSize;
         private Color _color;
@@ -38,6 +39,7 @@ namespace Particle_Effects
         private bool _randomizeParticleSize;
         private bool _randomizeRotation;
         private bool _fadeOut;
+        private bool _applyGravity;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParticleSystem"/> class with default parameters.
@@ -65,6 +67,8 @@ namespace Particle_Effects
             _lifetime = 2f;
             _particleSpeed = 1f;
             _fadeOut = false;
+            _applyGravity = false;
+            _gravity = 0.1f;
         }
 
         /// <summary>
@@ -95,6 +99,8 @@ namespace Particle_Effects
             _color = color;
             _particleSpeed = speed;
             _lifetime = lifetime;
+            _applyGravity = false;
+            _gravity = 0.1f;
         }
 
         /// <summary>
@@ -106,21 +112,23 @@ namespace Particle_Effects
             Texture2D texture = _textures[_generator.Next(_textures.Count)];
             Vector2 position = EmitterLocation;
             Vector2 particleDirection;
-            if (_direction == Vector2.Zero)
+            if (_direction == Vector2.Zero) // When no direction specified, angle of spread is 360 degrees
             {
                 particleDirection = new Vector2(
                     (float)(_generator.NextDouble() * 2 - 1),
                     (float)(_generator.NextDouble() * 2 - 1));
             }
-            else
+            else  // determines a random direction based on direction and the anglle of spread
             {
                 _direction.Normalize();
                 particleDirection = GetRandomRotatedVector(_direction, _angleSpread / 2);
             }
 
-            Vector2 velocity = new Vector2(
-                        1f * (float)(_generator.NextDouble() * 2 - 1),
-                        1f * (float)(_generator.NextDouble() * 2 - 1));
+           //// Determines velocity of particles generated
+           //Vector2 velocity = new Vector2(
+           //            1f * (float)(_generator.NextDouble() * 2 - 1),
+           //            1f * (float)(_generator.NextDouble() * 2 - 1));
+
             float angle = 0;
             float angularVelocity;
             if (_randomizeRotation)
@@ -139,7 +147,7 @@ namespace Particle_Effects
             float size = (float)_generator.NextDouble();
             int ttl = (int)Math.Round(60 * _lifetime + _generator.Next(-5, 5));
 
-            return new Particle(texture, position, particleDirection * _particleSpeed, angle, angularVelocity, _color, size, ttl, _fadeOut);
+            return new Particle(texture, position, particleDirection * _particleSpeed, angle, angularVelocity, _color, size, ttl, _fadeOut, _applyGravity, _gravity);
         }
 
         /// <summary>
@@ -220,6 +228,21 @@ namespace Particle_Effects
             set { _direction = value; }
         }
 
+        public bool ApplyGravity
+        {
+            get { return _applyGravity; }
+            set { _applyGravity = value; }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the gravity applied to particles.
+        /// </summary>
+        public float Gravity
+        {
+            get { return _gravity; }
+            set { _gravity = value; }
+        }
         /// <summary>
         /// Gets or sets the density of particles generated per update.
         /// </summary>
@@ -228,6 +251,7 @@ namespace Particle_Effects
             get { return _particleDensity; }
             set { _particleDensity = value; }
         }
+        
 
         /// <summary>
         /// Gets or sets the maximum number of particles in the system.

@@ -66,6 +66,16 @@ namespace Particle_Effects
         public float Opacity { get; set; }
 
         /// <summary>
+        /// Gets or sets whether gravity will be applied to the particles.
+        /// </summary>
+        public bool ApplyGravity {  get; set; }
+        /// <summary>
+        /// Gets or sets what gravity should be. 
+        /// </summary>
+        public float Gravity {  get; set; }
+
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Particle"/> class with the specified properties.
         /// </summary>
         /// <param name="texture">The texture to use for the particle.</param>
@@ -77,7 +87,8 @@ namespace Particle_Effects
         /// <param name="size">The size of the particle.</param>
         /// <param name="ttl">The time to live (TTL) of the particle, in frames.</param>
         /// <param name="fadeOut">Whether the particle should fade out over its lifetime.</param>
-        public Particle(Texture2D texture, Vector2 position, Vector2 velocity, float angle, float angularVelocity, Color color, float size, int ttl, bool fadeOut)
+        /// <param name="applyGravity">gravity should be applied to the particle.</param>
+        public Particle(Texture2D texture, Vector2 position, Vector2 velocity, float angle, float angularVelocity, Color color, float size, int ttl, bool fadeOut, bool applyGravity, float gravity)
         {
             Opacity = 1f;
             Texture = texture;
@@ -89,6 +100,8 @@ namespace Particle_Effects
             Size = size;
             TTL = ttl;
             _fadeOut = fadeOut;
+            ApplyGravity = applyGravity;
+            Gravity = gravity;
             if (!fadeOut)
             {
                 _fadeOutSpeed = 0f;
@@ -106,6 +119,8 @@ namespace Particle_Effects
         {
             TTL--;
             Position += Velocity;
+            if (ApplyGravity)
+                Velocity = new Vector2(Velocity.X, Velocity.Y + Gravity);
             Angle += AngularVelocity;          
             Opacity -= _fadeOutSpeed;
         }
