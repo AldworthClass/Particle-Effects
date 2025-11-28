@@ -14,7 +14,11 @@ namespace Particle_Effects
 
         Vector2 direction;
 
-        KeyboardState KeyboardState;
+        KeyboardState keyboardState, previousKeyboardState;
+        MouseState mouseState, previousMouseState;
+
+        SpriteFont instructionsFont;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -53,37 +57,42 @@ namespace Particle_Effects
             starTexture = Content.Load<Texture2D>("star");
             circleTexture = Content.Load<Texture2D>("circle");
             diamondTexture = Content.Load<Texture2D>("diamond");
+            instructionsFont = Content.Load<SpriteFont>("InstructionsFont");
         }
 
         protected override void Update(GameTime gameTime)
         {
-            KeyboardState = Keyboard.GetState();
+            previousKeyboardState = keyboardState;
+            keyboardState = Keyboard.GetState();
+            previousMouseState = mouseState;
+            mouseState = Mouse.GetState();
+
             direction = Vector2.Zero;
-            if (KeyboardState.IsKeyDown(Keys.W))
+            if (keyboardState.IsKeyDown(Keys.W))
                 direction.Y -= 1;
-            if (KeyboardState.IsKeyDown(Keys.S))
+            if (keyboardState.IsKeyDown(Keys.S))
                 direction.Y += 1;
-            if (KeyboardState.IsKeyDown(Keys.A))
+            if (keyboardState.IsKeyDown(Keys.A))
                 direction.X -= 1;
-            if (KeyboardState.IsKeyDown(Keys.D))
+            if (keyboardState.IsKeyDown(Keys.D))
                 direction.X += 1;
-            if (KeyboardState.IsKeyDown(Keys.Space))
+            if (keyboardState.IsKeyDown(Keys.Space))
                 particleSystem.AngleSpread = 0.2f;
             else
                 particleSystem.AngleSpread = MathHelper.PiOver4;
 
-            if (KeyboardState.IsKeyDown(Keys.R))
+            if (keyboardState.IsKeyDown(Keys.R))
             {
                 particleSystem.RandomizeColor = false; // Toggle random color
                 particleSystem.Color = Color.Red; // Toggle the particle system on/off
             }
-            if (KeyboardState.IsKeyDown(Keys.G))
+            if (keyboardState.IsKeyDown(Keys.G))
             {
                 particleSystem.RandomizeColor = false; // Toggle random color
                 particleSystem.Color = Color.Green; // Toggle the particle system on/off
             }
 
-            if (KeyboardState.IsKeyDown(Keys.Enter))
+            if (keyboardState.IsKeyDown(Keys.Enter))
             {
                 particleSystem.RandomizeColor = true; // Toggle random color
                 
@@ -109,7 +118,14 @@ namespace Particle_Effects
             // TODO: Add your drawing code here
             particleSystem.Draw(_spriteBatch);
             _spriteBatch.Begin();
-            _spriteBatch.Draw(circleTexture, new Rectangle(10, 10, 100, 100), Color.White   );
+
+
+            _spriteBatch.DrawString(instructionsFont, "Press arrow keys to change direction", new Vector2(10, 10), Color.Yellow);
+            _spriteBatch.DrawString(instructionsFont, "Press number keys to view different colors", new Vector2(10, 30), Color.Yellow);
+            _spriteBatch.DrawString(instructionsFont, "Press r to toggle random colors on/off", new Vector2(10, 10), Color.Yellow);
+            _spriteBatch.DrawString(instructionsFont, "Press g to toggle gravity on/off", new Vector2(10, 10), Color.Yellow);
+
+
             _spriteBatch.End();
 
             base.Draw(gameTime);

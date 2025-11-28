@@ -37,6 +37,13 @@
 /processorParam:TextureFormat=Color
 /build:diamond.png
 
+#begin InstructionsFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:InstructionsFont.spritefont
+
 #begin star.png
 /importer:TextureImporter
 /processor:TextureProcessor

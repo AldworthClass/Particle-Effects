@@ -145,7 +145,7 @@ namespace Particle_Effects
             }
 
             float size = (float)_generator.NextDouble();
-            int ttl = (int)Math.Round(60 * _lifetime + _generator.Next(-5, 5));
+            int ttl = (int)Math.Round(60 * _lifetime + _generator.Next(-5, 5)); // Adds a bit of randomness for particle lifetime
 
             return new Particle(texture, position, particleDirection * _particleSpeed, angle, angularVelocity, _color, size, ttl, _fadeOut, _applyGravity, _gravity);
         }
