@@ -43,7 +43,7 @@ namespace Particle_Effects
             particleSystem.ParticleSpeed = 2f;
             particleSystem.RotationSpeed = -0.3f;
             //particleSystem.RandomizeRotation = false;
-            particleSystem.FadeOut = true; // Enable fade out effect
+            particleSystem.FadeOut = false; // Enable fade out effect
             particleSystem.AngleSpread = MathHelper.PiOver2;
             //particleSystem.ApplyGravity = true;
 
@@ -109,9 +109,13 @@ namespace Particle_Effects
             // Toggle random color
             if (keyboardState.IsKeyDown(Keys.R) && previousKeyboardState.IsKeyDown(Keys.R))
                 particleSystem.RandomizeColor = !particleSystem.RandomizeColor;
-          
+            
+            // Toggle fade out
+            if (keyboardState.IsKeyDown(Keys.F) && !previousKeyboardState.IsKeyDown(Keys.F))
+                particleSystem.FadeOut = !particleSystem.FadeOut;
+
             // Toggle gravity
-            if (keyboardState.IsKeyDown(Keys.G) && previousKeyboardState.IsKeyDown(Keys.G))
+            if (keyboardState.IsKeyDown(Keys.G) && !previousKeyboardState.IsKeyDown(Keys.G))
                 particleSystem.ApplyGravity = !particleSystem.ApplyGravity; // Toggle random color
 
             // Adjust angle of spread
@@ -145,6 +149,33 @@ namespace Particle_Effects
 
             }
 
+            // Adjust TTL
+            // Decrease
+            if (keyboardState.IsKeyDown(Keys.L) && mouseState.ScrollWheelValue < previousMouseState.ScrollWheelValue)
+            {
+                particleSystem.Duration = MathHelper.Max(0, particleSystem.Duration - 0.1f);
+
+            }
+            // Increase
+            if (keyboardState.IsKeyDown(Keys.L) && mouseState.ScrollWheelValue > previousMouseState.ScrollWheelValue)
+            {
+                particleSystem.Duration = MathHelper.Min(6, particleSystem.Duration + 0.1f);
+
+            }
+
+            // Adjust Density
+            // Decrease
+            if (keyboardState.IsKeyDown(Keys.D) && mouseState.ScrollWheelValue < previousMouseState.ScrollWheelValue)
+            {
+                particleSystem.ParticleDensity = MathHelper.Max(0, particleSystem.ParticleDensity - 0.01f);
+
+            }
+            // Increase
+            if (keyboardState.IsKeyDown(Keys.D) && mouseState.ScrollWheelValue > previousMouseState.ScrollWheelValue)
+            {
+                particleSystem.ParticleDensity = MathHelper.Min(1, particleSystem.ParticleDensity + 0.01f);
+
+            }
 
             particleSystem.EmitterLocation = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
             particleSystem.Update();
@@ -169,11 +200,14 @@ namespace Particle_Effects
             _spriteBatch.DrawString(instructionsFont, "Press arrow keys to change direction", new Vector2(10, 10), Color.Yellow);
             _spriteBatch.DrawString(instructionsFont, "Press number keys to view different colors", new Vector2(10, 30), Color.Yellow);
             _spriteBatch.DrawString(instructionsFont, "Press r to toggle random colors on/off", new Vector2(10, 50), Color.Yellow);
-            _spriteBatch.DrawString(instructionsFont, "Press g to toggle gravity on/off", new Vector2(10, 70), Color.Yellow);
-            _spriteBatch.DrawString(instructionsFont, "Hold A and Mouse wheel to narrow/widen angle of spread", new Vector2(10, 90), Color.Yellow);
-            _spriteBatch.DrawString(instructionsFont, "Hold S and Mouse wheel to increase/decrease particle speed", new Vector2(10, 110), Color.Yellow);
-            _spriteBatch.DrawString(instructionsFont, "Hold L and Mouse wheel to increase/decrease particle lifetime", new Vector2(10, 130), Color.Yellow);
+            _spriteBatch.DrawString(instructionsFont, "Press f to toggle fadeout on/off", new Vector2(10, 70), Color.Yellow);
+            _spriteBatch.DrawString(instructionsFont, "Press p to pause/unpause particle engine", new Vector2(10, 90), Color.Yellow);
 
+            _spriteBatch.DrawString(instructionsFont, "Press g to toggle gravity on/off", new Vector2(10,110), Color.Yellow);
+            _spriteBatch.DrawString(instructionsFont, "Hold A and Mouse wheel to narrow/widen angle of spread", new Vector2(10, 130), Color.Yellow);
+            _spriteBatch.DrawString(instructionsFont, "Hold S and Mouse wheel to increase/decrease particle speed", new Vector2(10, 150), Color.Yellow);
+            _spriteBatch.DrawString(instructionsFont, "Hold L and Mouse wheel to increase/decrease particle lifetime", new Vector2(10, 170), Color.Yellow);
+            _spriteBatch.DrawString(instructionsFont, "Hold D and Mouse wheel to increase/decrease particle density", new Vector2(10, 190), Color.Yellow);
 
             _spriteBatch.End();
 

@@ -24,7 +24,7 @@ namespace Particle_Effects
         private List<Particle> _particles;
         private List<Texture2D> _textures;
 
-        private float _particleDensity; // value between 0-1 a percentage
+        private float _particleDensity; // value between 0-1 a percentage, max particles is 500
         private float _rotationSpeed;   // Speed at which particles rotate
         private float _angleSpread;     // Spread of particles in radians
         private float _particleSpeed;   // Speed particles travel in pixels per frame
@@ -101,6 +101,7 @@ namespace Particle_Effects
             _lifetime = lifetime;
             _applyGravity = false;
             _gravity = 0.1f;
+            _fadeOut = false;
         }
 
         /// <summary>
