@@ -118,13 +118,13 @@ namespace Particle_Effects
             // Decrease
             if (keyboardState.IsKeyDown(Keys.A) && mouseState.ScrollWheelValue < previousMouseState.ScrollWheelValue)
             {
-                particleSystem.AngleSpread = MathHelper.Clamp(particleSystem.AngleSpread - 0.2f, 0f, MathHelper.TwoPi);
+                particleSystem.AngleSpread = MathHelper.Max(particleSystem.AngleSpread - 0.2f, 0f);
 
             }
             // Increase
             if (keyboardState.IsKeyDown(Keys.A) && mouseState.ScrollWheelValue > previousMouseState.ScrollWheelValue)
             {
-                particleSystem.AngleSpread = MathHelper.Clamp(particleSystem.AngleSpread + 0.2f, 0f, MathHelper.TwoPi);
+                particleSystem.AngleSpread = MathHelper.Min(particleSystem.AngleSpread + 0.2f, MathHelper.TwoPi);
 
             }
 
