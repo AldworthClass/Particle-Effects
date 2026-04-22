@@ -241,20 +241,20 @@ namespace Particle_Effects
 
 
         /// <summary>
-        /// Gets or sets the opacity applied to particles.
+        /// Gets or sets the opacity applied to particles. Min 0, Max 1
         /// </summary>
         public float Opacity
         {
             get { return _opacity; }
             set 
             {
-                //_opacity = MathHelper.Clamp(value, 0f, 1f);
-                if (value > 1)
-                    _opacity = 1f;
-                else if (value < 0)
-                    _opacity = 0f;
-                else
-                    _opacity = value;
+                _opacity = MathHelper.Clamp(value, 0f, 1f);
+                //if (value > 1)
+                //    _opacity = 1f;
+                //else if (value < 0)
+                //    _opacity = 0f;
+                //else
+                //    _opacity = value;
             }
         }
 

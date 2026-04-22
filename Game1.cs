@@ -7,9 +7,10 @@ namespace Particle_Effects
 {
     public class Game1 : Game
     {
-        // Add Opacity
-        // Add Particle Size
-        private GraphicsDeviceManager _graphics;
+       
+        // Add Particle Size - Decide whether it should be a width/length provided or a scale factor.
+        // Issue with scale is that all textures in engine woul dneed to be approx the same size.  If width/height specified, aspect ratio would need to be changed.
+        // Add specifying a rectangle for generating particles        private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         Texture2D starTexture, circleTexture, diamondTexture;
         ParticleSystem particleSystem;

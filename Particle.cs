@@ -44,7 +44,7 @@ namespace Particle_Effects
         public Color Color { get; set; }
 
         /// <summary>
-        /// Gets or sets the size of the particle.
+        /// Gets or sets the size of the particle.  
         /// </summary>
         public float Size { get; set; }
 
