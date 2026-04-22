@@ -12,6 +12,7 @@ namespace Particle_Effects
         // Issue with scale is that all textures in engine woul dneed to be approx the same size.  If width/height specified, aspect ratio would need to be changed.
         // Add specifying a rectangle for generating particles        private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private GraphicsDeviceManager _graphics;
         Texture2D starTexture, circleTexture, diamondTexture;
         ParticleSystem particleSystem;
 

@@ -19,12 +19,44 @@ namespace Particle_Effects
         /// <summary>
         /// Gets or sets the location of the particle emitter.
         /// </summary>
-        public Vector2 EmitterLocation { get; set; }
+        public Vector2 EmitterLocation
+        {
+            get { return _emitterLocation; }
+            set
+            {
+                _emitterLocation = value;
+                _area.Location = value.ToPoint();
+            }
+        }
+
+        public int EmitterWidth
+        {
+            get { return _area.Width; }
+            set {   if (value < 0)
+                    _area.Width = 0;
+                    else
+                    _area.Width = value;                       
+                }
+        }
+
+        public int EmitterHeight
+        {
+            get { return _area.Height; }
+            set
+            {
+                if (value < 0)
+                    _area.Height = 0;
+                else
+                    _area.Height = value;
+            }
+        }
 
         private Vector2 _direction;
         private List<Particle> _particles;
         private List<Texture2D> _textures;
 
+        private Vector2 _emitterLocation;
+        private Rectangle _area;
         private float _particleDensity; // value between 0-1 a percentage, max particles is 500
         private float _rotationSpeed;   // Speed at which particles rotate
         private float _angleSpread;     // Spread of particles in radians
@@ -50,7 +82,9 @@ namespace Particle_Effects
         /// <param name="location">The location of the emitter.</param>
         public ParticleSystem(List<Texture2D> textures, Vector2 location)
         {
-            EmitterLocation = location;
+            _emitterLocation = location;
+            _area = new Rectangle();
+            _area.Location = _emitterLocation.ToPoint();
             _textures = textures;
             _particles = new List<Particle>();
             _generator = new Random();
@@ -88,7 +122,9 @@ namespace Particle_Effects
         {
             _randomizeColor = false;
             _direction = direction;
-            EmitterLocation = location;
+            _emitterLocation = location;
+            _area = new Rectangle();
+            _area.Location = _emitterLocation.ToPoint();
             _textures = textures;
             _particles = new List<Particle>();
             _generator = new Random();
