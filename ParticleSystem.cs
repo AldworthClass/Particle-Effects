@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,6 +32,7 @@ namespace Particle_Effects
         private float _lifetime;        // Approx lifetime in seconds with some randomness built in
         private int _maxParticles;      // the maximum number of particles allowed
         private float _gravity;
+        private float _opacity;
         int _minParticleSize;
         int _maxParticleSize;
         private Color _color;
@@ -69,6 +71,7 @@ namespace Particle_Effects
             _fadeOut = false;
             _applyGravity = false;
             _gravity = 0.1f;
+            _opacity = 1f;
         }
 
         /// <summary>
@@ -148,7 +151,7 @@ namespace Particle_Effects
             float size = (float)_generator.NextDouble();
             int ttl = (int)Math.Round(60 * _lifetime + _generator.Next(-5, 5)); // Adds a bit of randomness for particle lifetime
 
-            return new Particle(texture, position, particleDirection * _particleSpeed, angle, angularVelocity, _color, size, ttl, _fadeOut, _applyGravity, _gravity);
+            return new Particle(texture, position, particleDirection * _particleSpeed, angle, angularVelocity, _color, size, ttl, _fadeOut, _applyGravity, _gravity, _opacity);
         }
 
         /// <summary>
@@ -235,6 +238,25 @@ namespace Particle_Effects
             set { _applyGravity = value; }
         }
 
+
+
+        /// <summary>
+        /// Gets or sets the opacity applied to particles.
+        /// </summary>
+        public float Opacity
+        {
+            get { return _opacity; }
+            set 
+            {
+                //_opacity = MathHelper.Clamp(value, 0f, 1f);
+                if (value > 1)
+                    _opacity = 1f;
+                else if (value < 0)
+                    _opacity = 0f;
+                else
+                    _opacity = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the gravity applied to particles.

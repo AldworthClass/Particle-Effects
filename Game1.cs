@@ -7,6 +7,8 @@ namespace Particle_Effects
 {
     public class Game1 : Game
     {
+        // Add Opacity
+        // Add Particle Size
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         Texture2D starTexture, circleTexture, diamondTexture;
@@ -142,11 +144,25 @@ namespace Particle_Effects
                     particleSystem.ParticleSpeed = 0.1f;
 
             }
+
             // Increase
             if (keyboardState.IsKeyDown(Keys.S) && mouseState.ScrollWheelValue > previousMouseState.ScrollWheelValue)
             {
                 particleSystem.ParticleSpeed += 0.1f;
 
+            }
+
+            // Adjust Opacity
+            // Decrease
+            if (keyboardState.IsKeyDown(Keys.O) && mouseState.ScrollWheelValue < previousMouseState.ScrollWheelValue)
+            {
+                particleSystem.Opacity -= 0.05f;
+            }
+
+            // Increase
+            if (keyboardState.IsKeyDown(Keys.O) && mouseState.ScrollWheelValue > previousMouseState.ScrollWheelValue)
+            {
+                particleSystem.Opacity += 0.05f;      
             }
 
             // Adjust TTL

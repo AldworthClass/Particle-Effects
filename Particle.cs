@@ -88,9 +88,9 @@ namespace Particle_Effects
         /// <param name="ttl">The time to live (TTL) of the particle, in frames.</param>
         /// <param name="fadeOut">Whether the particle should fade out over its lifetime.</param>
         /// <param name="applyGravity">gravity should be applied to the particle.</param>
-        public Particle(Texture2D texture, Vector2 position, Vector2 velocity, float angle, float angularVelocity, Color color, float size, int ttl, bool fadeOut, bool applyGravity, float gravity)
+        public Particle(Texture2D texture, Vector2 position, Vector2 velocity, float angle, float angularVelocity, Color color, float size, int ttl, bool fadeOut, bool applyGravity, float gravity, float opacity)
         {
-            Opacity = 1f;
+            Opacity = opacity;
             Texture = texture;
             Position = position;
             Velocity = velocity;
@@ -108,7 +108,7 @@ namespace Particle_Effects
             }
             else
             {
-                _fadeOutSpeed = 1.0f / TTL; // Calculate fade out speed based on TTL
+                _fadeOutSpeed = opacity / TTL; // Calculate fade out speed based on TTL
             }
         }
 
