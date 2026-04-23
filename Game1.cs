@@ -10,7 +10,7 @@ namespace Particle_Effects
        
         // Add Particle Size - Decide whether it should be a width/length provided or a scale factor.
         // Issue with scale is that all textures in engine woul dneed to be approx the same size.  If width/height specified, aspect ratio would need to be changed.
-        // Add specifying a rectangle for generating particles        private GraphicsDeviceManager _graphics;
+        // Adding specifying a rectangle for generating particles, need to implement a direction for these particles to travel
         private SpriteBatch _spriteBatch;
         private GraphicsDeviceManager _graphics;
         Texture2D starTexture, circleTexture, diamondTexture;
@@ -195,6 +195,19 @@ namespace Particle_Effects
 
             }
 
+            // Adjust Size
+            // Increase
+            if (mouseState.LeftButton == ButtonState.Pressed && previousMouseState.LeftButton == ButtonState.Released)
+            {
+                particleSystem.Scale -= 0.1f;
+            }
+
+            // Decrease
+            if (mouseState.RightButton == ButtonState.Pressed && previousMouseState.RightButton == ButtonState.Released)
+            {
+                particleSystem.Scale += 0.1f;
+            }
+
             particleSystem.EmitterLocation = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
             particleSystem.Update();
 
@@ -226,6 +239,8 @@ namespace Particle_Effects
             _spriteBatch.DrawString(instructionsFont, "Hold S and Mouse wheel to increase/decrease particle speed", new Vector2(10, 150), Color.Yellow);
             _spriteBatch.DrawString(instructionsFont, "Hold L and Mouse wheel to increase/decrease particle lifetime", new Vector2(10, 170), Color.Yellow);
             _spriteBatch.DrawString(instructionsFont, "Hold D and Mouse wheel to increase/decrease particle density", new Vector2(10, 190), Color.Yellow);
+            _spriteBatch.DrawString(instructionsFont, "Left click to make partickes smaller, right click for larger", new Vector2(10, 210), Color.Yellow);
+
 
             _spriteBatch.End();
 

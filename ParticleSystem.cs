@@ -9,6 +9,12 @@ using System.Threading.Tasks;
 
 namespace Particle_Effects
 {
+    public enum SizeEffects
+    {
+        None,
+        Grow,
+        Shrink
+    }
     /// <summary>
     /// Manages a collection of particles, handling their creation, updating, and rendering.
     /// </summary>
@@ -51,7 +57,9 @@ namespace Particle_Effects
             }
         }
 
+        private SizeEffects _sizeEffect;
         private Vector2 _direction;
+        private Vector2 _areaDirection;
         private List<Particle> _particles;
         private List<Texture2D> _textures;
 
@@ -62,6 +70,7 @@ namespace Particle_Effects
         private float _angleSpread;     // Spread of particles in radians
         private float _particleSpeed;   // Speed particles travel in pixels per frame
         private float _lifetime;        // Approx lifetime in seconds with some randomness built in
+        private float _scaleFactor;     // Applies a scale factor to particles
         private int _maxParticles;      // the maximum number of particles allowed
         private float _gravity;
         private float _opacity;
@@ -74,6 +83,7 @@ namespace Particle_Effects
         private bool _randomizeRotation;
         private bool _fadeOut;
         private bool _applyGravity;
+        private bool _emitterArea;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParticleSystem"/> class with default parameters.
@@ -88,7 +98,7 @@ namespace Particle_Effects
             _textures = textures;
             _particles = new List<Particle>();
             _generator = new Random();
-
+            _emitterArea = false;
             _direction = Vector2.Zero;
             _particleDensity = 1f;
             _maxParticles = 500;
@@ -106,6 +116,8 @@ namespace Particle_Effects
             _applyGravity = false;
             _gravity = 0.1f;
             _opacity = 1f;
+            _scaleFactor = 1f;
+            _sizeEffect = SizeEffects.None;
         }
 
         /// <summary>
@@ -141,6 +153,9 @@ namespace Particle_Effects
             _applyGravity = false;
             _gravity = 0.1f;
             _fadeOut = false;
+            _emitterArea = false;
+            _scaleFactor = 1f;
+            _sizeEffect = SizeEffects.None;
         }
 
         /// <summary>
@@ -183,11 +198,11 @@ namespace Particle_Effects
                     (float)_generator.NextDouble(),
                     (float)_generator.NextDouble());
             }
-
-            float size = (float)_generator.NextDouble();
+            float size = _scaleFactor + (float)_generator.Next(-5, 6) / 10;
+            //float size = (float)_generator.NextDouble();// Determine reasonable value basedd on scale factor like +- scale factor.
             int ttl = (int)Math.Round(60 * _lifetime + _generator.Next(-5, 5)); // Adds a bit of randomness for particle lifetime
 
-            return new Particle(texture, position, particleDirection * _particleSpeed, angle, angularVelocity, _color, size, ttl, _fadeOut, _applyGravity, _gravity, _opacity);
+            return new Particle(texture, position, particleDirection * _particleSpeed, angle, angularVelocity, _color, size, ttl, _fadeOut, _applyGravity, _gravity, _opacity, _sizeEffect);
         }
 
         /// <summary>
@@ -268,12 +283,23 @@ namespace Particle_Effects
             set { _direction = value; }
         }
 
+        /// <summary>
+        /// Turns gravity on or off.
+        /// </summary>
         public bool ApplyGravity
         {
             get { return _applyGravity; }
             set { _applyGravity = value; }
         }
 
+        /// <summary>
+        /// Sets the factor to scale the texture by.
+        /// </summary>
+        public float Scale
+        {
+            get { return _scaleFactor; }
+            set { _scaleFactor = MathHelper.Max(0,value); }
+        }
 
 
         /// <summary>
@@ -310,7 +336,15 @@ namespace Particle_Effects
             get { return _particleDensity; }
             set { _particleDensity = value; }
         }
-        
+
+        /// <summary>
+        /// Turns on/off area particle generation.
+        /// </summary>
+        public bool AreaGeneration
+        {
+            get { return _emitterArea; }
+            set { _emitterArea = value; }
+        }
 
         /// <summary>
         /// Gets or sets the maximum number of particles in the system.

@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace Particle_Effects
 {
+
+
     /// <summary>
     /// Represents a single particle in a particle system, with properties for position, velocity, angular velocity, color, size, and lifetime.
     /// </summary>
@@ -17,6 +19,8 @@ namespace Particle_Effects
         /// Gets or sets the texture used to draw the particle.
         /// </summary>
         public Texture2D Texture { get; set; }
+
+        public SizeEffects SizeEffect { get; set; }
 
         /// <summary>
         /// Gets or sets the current position of the particle.
@@ -88,8 +92,9 @@ namespace Particle_Effects
         /// <param name="ttl">The time to live (TTL) of the particle, in frames.</param>
         /// <param name="fadeOut">Whether the particle should fade out over its lifetime.</param>
         /// <param name="applyGravity">gravity should be applied to the particle.</param>
-        public Particle(Texture2D texture, Vector2 position, Vector2 velocity, float angle, float angularVelocity, Color color, float size, int ttl, bool fadeOut, bool applyGravity, float gravity, float opacity)
+        public Particle(Texture2D texture, Vector2 position, Vector2 velocity, float angle, float angularVelocity, Color color, float size, int ttl, bool fadeOut, bool applyGravity, float gravity, float opacity, SizeEffects sizeEffect)
         {
+            SizeEffect = sizeEffect;
             Opacity = opacity;
             Texture = texture;
             Position = position;
@@ -134,8 +139,19 @@ namespace Particle_Effects
             Rectangle sourceRectangle = new Rectangle(0, 0, Texture.Width, Texture.Height);
             Vector2 origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
 
-            spriteBatch.Draw(Texture, Position, sourceRectangle, Color * Opacity,
-                Angle, origin, Size, SpriteEffects.None, 0f);
+            if (SizeEffect == SizeEffects.Grow)
+            {
+                Size *= 1.1f;
+            }
+            else if (SizeEffect == SizeEffects.Shrink)
+            {
+                Size *= 0.9f;
+            }
+
+
+
+                spriteBatch.Draw(Texture, Position, sourceRectangle, Color * Opacity,
+                    Angle, origin, Size, SpriteEffects.None, 0f);
         }
     }
 }
