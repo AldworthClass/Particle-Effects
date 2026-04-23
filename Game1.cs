@@ -7,9 +7,7 @@ namespace Particle_Effects
 {
     public class Game1 : Game
     {
-       
-        // Add Particle Size - Decide whether it should be a width/length provided or a scale factor.
-        // Issue with scale is that all textures in engine woul dneed to be approx the same size.  If width/height specified, aspect ratio would need to be changed.
+       // Adding growing and shrinking.  Enumeration added for this.
         // Adding specifying a rectangle for generating particles, need to implement a direction for these particles to travel
         private SpriteBatch _spriteBatch;
         private GraphicsDeviceManager _graphics;
